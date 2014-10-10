@@ -1,3 +1,4 @@
+import ConfigParser
 import pymongo as pm
 from datetime import datetime 
 import numpy as np
@@ -8,6 +9,12 @@ import settings as setfile
 host = setfile.DATABASES['default']['HOST']
 dbname = setfile.DATABASES['default']['NAME']
 port = int(setfile.DATABASES['default']['PORT'])
+
+def readConfigFile():
+    config = ConfigParser.ConfigParser()
+    config.read('/tmp/backend_uwsgi_setting')
+    env = config.get('uwsgi','env')
+    setting_file_name = env.strip().split('.')[1]
 
 def updatescore():
     set_params()

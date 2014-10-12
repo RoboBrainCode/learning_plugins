@@ -2,19 +2,22 @@ import ConfigParser
 import pymongo as pm
 from datetime import datetime 
 import numpy as np
+import importlib
 import sys
-sys.path.insert(0,'../Backend/')
-import settings as setfile
+sys.path.insert(0,'/var/www/Backend/Backend/')
+#import settings as setfile
 
-host = setfile.DATABASES['default']['HOST']
-dbname = setfile.DATABASES['default']['NAME']
-port = int(setfile.DATABASES['default']['PORT'])
+#host = setfile.DATABASES['default']['HOST']
+#dbname = setfile.DATABASES['default']['NAME']
+#port = int(setfile.DATABASES['default']['PORT'])
 
 def readConfigFile():
+    global setfile
     config = ConfigParser.ConfigParser()
     config.read('/tmp/backend_uwsgi_setting')
     env = config.get('uwsgi','env')
     setting_file_name = env.strip().split('.')[1]
+    setfile = importlib.import_module(setting_file_name)	
 
 def updatescore():
     set_params()
@@ -95,7 +98,8 @@ def strategy_2(project_name, netvotes, created_at, project_weights, inverse_feed
     return score
 
 if __name__ == "__main__":
-    #global host, dbname, port
+    global host, dbname, port, setfile
+    readConfigFile()
     updatescore()
 
     host = setfile.DATABASES['default']['HOST']

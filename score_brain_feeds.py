@@ -48,10 +48,12 @@ def set_params():
     project_weights = {
         'http://robobrain.me' : 0.13, 
         'hallucinating humans' : 0.13, 
-        'http://wordnet.princeton.edu/' : 0.09, 
+        'http://wordnet.princeton.edu/' : 0.00009, 
         'http://tellmedave.cs.cornell.edu' : 0.13,
         'http://pr.cs.cornell.edu/anticipation/' : 0.13,
         'http://pr.cs.cornell.edu/sceneunderstanding/' : 0.13,
+        'http://sw.opencyc.org' : 0.13,
+        'http://image-net.org' : 0.13,
         'http://pr.cs.cornell.edu/hallucinatinghumans/' : 0.13,
         'http://h2r.cs.brown.edu/projects/grounded-language-understanding/' : 0.13
     }

@@ -31,16 +31,19 @@ def updatescore():
 
     feeds_to_update = brain_feeds.find({"update_score" : True})
     for feeds in feeds_to_update:
-        project_name = feeds['source_url']
-        netvotes = int(feeds['upvotes']) - int(feeds['downvotes'])
-        created_at = feeds['created_at']
-        inverse_feed_weight = feeds['log_normalized_feed_show']
-        new_score = strategy_2(project_name, netvotes, created_at, project_weights, inverse_feed_weight)
-        print "old score ",feeds['score']
-        print "{0} {1}".format(feeds['source_url'],feeds['_id'])
-        print "new score ",new_score
-        print "*************************************"
-        brain_feeds.update({'_id':feeds['_id']},{'$set':{'score' : new_score, 'update_score' : False}},upsert=False,multi=False)
+        try:
+            project_name = feeds['source_url']
+            netvotes = int(feeds['upvotes']) - int(feeds['downvotes'])
+            created_at = feeds['created_at']
+            inverse_feed_weight = feeds['log_normalized_feed_show']
+            new_score = strategy_2(project_name, netvotes, created_at, project_weights, inverse_feed_weight)
+            print "old score ",feeds['score']
+            print "{0} {1}".format(feeds['source_url'],feeds['_id'])
+            print "new score ",new_score
+            print "*************************************"
+            brain_feeds.update({'_id':feeds['_id']},{'$set':{'score' : new_score, 'update_score' : False}},upsert=False,multi=False)
+        except:
+            print "**********skipping**********"
         
 
 def set_params():
@@ -48,10 +51,12 @@ def set_params():
     project_weights = {
         'http://robobrain.me' : 0.13, 
         'hallucinating humans' : 0.13, 
-        'http://wordnet.princeton.edu/' : 0.09, 
+        'http://wordnet.princeton.edu/' : 0.00009, 
         'http://tellmedave.cs.cornell.edu' : 0.13,
         'http://pr.cs.cornell.edu/anticipation/' : 0.13,
         'http://pr.cs.cornell.edu/sceneunderstanding/' : 0.13,
+        'http://sw.opencyc.org' : 0.13,
+        'http://image-net.org' : 0.13,
         'http://pr.cs.cornell.edu/hallucinatinghumans/' : 0.13,
         'http://h2r.cs.brown.edu/projects/grounded-language-understanding/' : 0.13
     }

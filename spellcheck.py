@@ -17,6 +17,7 @@ import urlparse
 from urllib2 import HTTPError
 from urllib2 import URLError
 import json
+import traceback
 
 def get_ginger_url(text):
     """Get URL for checking grammar using Ginger.
@@ -42,27 +43,30 @@ def get_ginger_url(text):
 def get_ginger_result(text):
     """Get a result of checking grammar.
     @param text English text
-    @return result of grammar check by Ginger
+    @return result of grammar check by Ginger, None in case of error
     """
     url = get_ginger_url(text)
 
     try:
         response = urllib.urlopen(url)
     except HTTPError as e:
-            print("HTTP Error:", e.code)
-            quit()
+        print("HTTP Error:", e.code)
+        return None
     except URLError as e:
-            print("URL Error:", e.reason)
-            quit()
+        print("URL Error:", e.reason)
+        return None
     except IOError, (errno, strerror):
         print("I/O error (%s): %s" % (errno, strerror))
-        quit
+        return None
+    except Exception:
+        print("Generic Exception: " + traceback.format_exc())
+        return None
 
     try:
         result = json.loads(response.read().decode('utf-8'))
     except ValueError:
         print("Value Error: Invalid server response.")
-        quit()
+        return None
 
     return(result)
 
@@ -80,7 +84,7 @@ def correct(text):
     results = get_ginger_result(original_text)
 
     # Correct grammar
-    if(not results["LightGingerTheTextResult"]):
+    if(not results or not results["LightGingerTheTextResult"]):
         return original_text
 
     # Incorrect grammar

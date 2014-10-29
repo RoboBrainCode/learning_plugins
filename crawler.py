@@ -67,7 +67,7 @@ def main():
     db = client[DB_NAME]
     BRAIN_FEEDS = db['brain_feeds']
     GRAPH_DB = neo4j.GraphDatabaseService(GRAPH_DB_URL)
-    query = neo4j.CypherQuery(GRAPH_DB, "MATCH (n) RETURN n LIMIT 1")
+    query = neo4j.CypherQuery(GRAPH_DB, "MATCH (n) RETURN n")
     for record in query.stream():
         belief = get_belief_score(record[0])
         set_belief_score(belief, record[0]['id'])

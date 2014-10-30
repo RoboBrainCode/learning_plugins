@@ -27,7 +27,7 @@ def set_params():
         'http://h2r.cs.brown.edu/projects/grounded-language-understanding/' : 0.13
     }
 
-    weight_vector = np.array([1, -1, -0.1, 0.5])
+    weight_vector = np.array([1, -1, 0.1, 0.5])
     smoothing_param = 10
 
 def normalize_feature_vector(feature_vector):
@@ -46,6 +46,10 @@ def extract_features(brain_feed, node_record):
 
 def get_belief_score(node_record):
     feature_vector = np.array([0] * len(weight_vector))
+    if 'feed_ids' not in node_record:
+        print "Node record doesn't have feed_ids:"
+        print str(node_record)
+        return 0.0
     for feed_id in node_record['feed_ids']:
         brain_feed = BRAIN_FEEDS.find_one({ 'jsonfeed_id': feed_id })
         if brain_feed:
